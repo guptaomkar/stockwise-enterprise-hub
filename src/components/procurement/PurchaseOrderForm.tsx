@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
@@ -56,7 +55,7 @@ export const PurchaseOrderForm: React.FC<PurchaseOrderFormProps> = ({
     vendorName: '',
     orderDate: '',
     expectedDelivery: '',
-    status: 'Draft' as const,
+    status: 'Draft' as 'Draft' | 'Pending' | 'Approved' | 'Received' | 'Cancelled',
     items: [{ productId: '', productName: '', quantity: 1, unitPrice: 0, total: 0 }]
   });
 
@@ -163,7 +162,7 @@ export const PurchaseOrderForm: React.FC<PurchaseOrderFormProps> = ({
 
             <div>
               <Label htmlFor="status">Status</Label>
-              <Select value={formData.status} onValueChange={(value: any) => setFormData({ ...formData, status: value })}>
+              <Select value={formData.status} onValueChange={(value: 'Draft' | 'Pending' | 'Approved' | 'Received' | 'Cancelled') => setFormData({ ...formData, status: value })}>
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>

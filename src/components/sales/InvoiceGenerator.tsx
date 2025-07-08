@@ -1,9 +1,8 @@
-
 import React from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { Download, Print } from 'lucide-react';
+import { Download, Printer } from 'lucide-react';
 
 interface SalesOrder {
   id: string;
@@ -52,7 +51,7 @@ export const InvoiceGenerator: React.FC<InvoiceGeneratorProps> = ({
             Invoice Generator
             <div className="flex space-x-2">
               <Button size="sm" variant="outline" onClick={handlePrint}>
-                <Print className="w-4 h-4 mr-2" />
+                <Printer className="w-4 h-4 mr-2" />
                 Print
               </Button>
               <Button size="sm" onClick={handleDownload}>

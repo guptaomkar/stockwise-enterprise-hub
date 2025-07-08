@@ -62,7 +62,7 @@ export const VendorForm: React.FC<VendorFormProps> = ({
     gstin: '',
     vatNumber: '',
     paymentTerms: 'Net 30',
-    status: 'Active' as const
+    status: 'Active' as 'Active' | 'Inactive' | 'Blacklisted'
   });
 
   useEffect(() => {
@@ -87,7 +87,7 @@ export const VendorForm: React.FC<VendorFormProps> = ({
     if (vendor) {
       onSave({ ...vendor, ...formData });
     } else {
-      onSave(formData);
+      onSave({ ...formData, orderHistory: [], documents: [] });
     }
   };
 
@@ -184,7 +184,7 @@ export const VendorForm: React.FC<VendorFormProps> = ({
               <Label htmlFor="status">Status</Label>
               <Select
                 value={formData.status}
-                onValueChange={(value: any) => setFormData({ ...formData, status: value })}
+                onValueChange={(value: 'Active' | 'Inactive' | 'Blacklisted') => setFormData({ ...formData, status: value })}
               >
                 <SelectTrigger>
                   <SelectValue />

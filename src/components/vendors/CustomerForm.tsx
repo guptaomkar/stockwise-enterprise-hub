@@ -59,7 +59,7 @@ export const CustomerForm: React.FC<CustomerFormProps> = ({
     vatNumber: '',
     creditLimit: 0,
     paymentTerms: 'Net 30',
-    status: 'Active' as const
+    status: 'Active' as 'Active' | 'Inactive' | 'Blacklisted'
   });
 
   useEffect(() => {
@@ -193,7 +193,7 @@ export const CustomerForm: React.FC<CustomerFormProps> = ({
               <Label htmlFor="status">Status</Label>
               <Select
                 value={formData.status}
-                onValueChange={(value: any) => setFormData({ ...formData, status: value })}
+                onValueChange={(value: 'Active' | 'Inactive' | 'Blacklisted') => setFormData({ ...formData, status: value })}
               >
                 <SelectTrigger>
                   <SelectValue />

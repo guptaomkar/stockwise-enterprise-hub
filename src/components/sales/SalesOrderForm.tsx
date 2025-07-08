@@ -60,7 +60,7 @@ export const SalesOrderForm: React.FC<SalesOrderFormProps> = ({
     orderDate: '',
     deliveryDate: '',
     currency: 'USD',
-    status: 'Draft' as const,
+    status: 'Draft' as 'Draft' | 'Confirmed' | 'Reserved' | 'Dispatched' | 'Delivered' | 'Cancelled',
     items: [{ productId: '', productName: '', quantity: 1, unitPrice: 0, total: 0, reserved: false }]
   });
 
@@ -202,7 +202,7 @@ export const SalesOrderForm: React.FC<SalesOrderFormProps> = ({
 
             <div>
               <Label htmlFor="status">Status</Label>
-              <Select value={formData.status} onValueChange={(value: any) => setFormData({ ...formData, status: value })}>
+              <Select value={formData.status} onValueChange={(value: 'Draft' | 'Confirmed' | 'Reserved' | 'Dispatched' | 'Delivered' | 'Cancelled') => setFormData({ ...formData, status: value })}>
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
