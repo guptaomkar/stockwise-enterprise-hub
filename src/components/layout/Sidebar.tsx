@@ -18,8 +18,8 @@ const navigation = [
   { name: 'Products', href: '/products', icon: Package },
   { name: 'Inventory', href: '/inventory', icon: Warehouse },
   { name: 'Warehouses', href: '/warehouses', icon: Building2 },
-  { name: 'Analytics', href: '/analytics', icon: BarChart3 },
   { name: 'Orders', href: '/orders', icon: ShoppingCart },
+  { name: 'Analytics', href: '/analytics', icon: BarChart3 },
   { name: 'Users', href: '/users', icon: Users },
   { name: 'Settings', href: '/settings', icon: Settings },
 ];

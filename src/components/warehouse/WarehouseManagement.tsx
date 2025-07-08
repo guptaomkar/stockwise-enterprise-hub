@@ -1,53 +1,293 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Building2, MapPin, Package, Users } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Building2, MapPin, Package, Users, Plus, Edit, Trash2, Shield } from 'lucide-react';
+import { useForm } from 'react-hook-form';
+import { useAuth } from '../../hooks/useAuth';
 
-const warehouses = [
+interface Warehouse {
+  id: number;
+  name: string;
+  location: string;
+  address: string;
+  capacity: string;
+  items: number;
+  staff: number;
+  manager: string;
+  phone: string;
+  email: string;
+}
+
+const initialWarehouses: Warehouse[] = [
   {
     id: 1,
     name: 'Main Warehouse',
     location: 'New York, NY',
+    address: '123 Industrial Ave, New York, NY 10001',
     capacity: '85%',
     items: 1250,
     staff: 12,
+    manager: 'John Smith',
+    phone: '+1-555-0101',
+    email: 'main@inventorypro.com'
   },
   {
     id: 2,
     name: 'West Coast Hub',
     location: 'Los Angeles, CA',
+    address: '456 Warehouse Blvd, Los Angeles, CA 90001',
     capacity: '67%',
     items: 890,
     staff: 8,
+    manager: 'Sarah Johnson',
+    phone: '+1-555-0102',
+    email: 'west@inventorypro.com'
   },
   {
     id: 3,
     name: 'Distribution Center',
     location: 'Chicago, IL',
+    address: '789 Logistics Way, Chicago, IL 60601',
     capacity: '92%',
     items: 1580,
     staff: 15,
+    manager: 'Mike Wilson',
+    phone: '+1-555-0103',
+    email: 'chicago@inventorypro.com'
   },
 ];
 
 export const WarehouseManagement = () => {
+  const { user } = useAuth();
+  const [warehouses, setWarehouses] = useState<Warehouse[]>(initialWarehouses);
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [editingWarehouse, setEditingWarehouse] = useState<Warehouse | null>(null);
+  
+  const form = useForm({
+    defaultValues: {
+      name: '',
+      location: '',
+      address: '',
+      manager: '',
+      phone: '',
+      email: '',
+    }
+  });
+
+  const isAdmin = user?.role === 'Administrator' || user?.email === 'admin@inventorypro.com';
+
+  const handleAddWarehouse = (data: any) => {
+    const newWarehouse: Warehouse = {
+      id: Date.now(),
+      ...data,
+      capacity: '0%',
+      items: 0,
+      staff: 0,
+    };
+    setWarehouses([...warehouses, newWarehouse]);
+    setIsAddDialogOpen(false);
+    form.reset();
+  };
+
+  const handleEditWarehouse = (warehouse: Warehouse) => {
+    setEditingWarehouse(warehouse);
+    form.reset({
+      name: warehouse.name,
+      location: warehouse.location,
+      address: warehouse.address,
+      manager: warehouse.manager,
+      phone: warehouse.phone,
+      email: warehouse.email,
+    });
+  };
+
+  const handleUpdateWarehouse = (data: any) => {
+    if (editingWarehouse) {
+      const updatedWarehouses = warehouses.map(w => 
+        w.id === editingWarehouse.id ? { ...w, ...data } : w
+      );
+      setWarehouses(updatedWarehouses);
+      setEditingWarehouse(null);
+      form.reset();
+    }
+  };
+
+  const handleDeleteWarehouse = (id: number) => {
+    if (window.confirm('Are you sure you want to delete this warehouse?')) {
+      setWarehouses(warehouses.filter(w => w.id !== id));
+    }
+  };
+
   return (
     <div className="space-y-6 animate-fade-in">
-      <h1 className="text-2xl font-bold text-gray-900">Warehouse Management</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold text-gray-900">Warehouse Management</h1>
+        {isAdmin && (
+          <Dialog open={isAddDialogOpen || !!editingWarehouse} onOpenChange={(open) => {
+            if (!open) {
+              setIsAddDialogOpen(false);
+              setEditingWarehouse(null);
+              form.reset();
+            }
+          }}>
+            <DialogTrigger asChild>
+              <Button onClick={() => setIsAddDialogOpen(true)}>
+                <Plus className="w-4 h-4 mr-2" />
+                Add Warehouse
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-2xl">
+              <DialogHeader>
+                <DialogTitle>
+                  {editingWarehouse ? 'Edit Warehouse' : 'Add New Warehouse'}
+                </DialogTitle>
+              </DialogHeader>
+              <Form {...form}>
+                <form onSubmit={form.handleSubmit(editingWarehouse ? handleUpdateWarehouse : handleAddWarehouse)} className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <FormField
+                      control={form.control}
+                      name="name"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Warehouse Name</FormLabel>
+                          <FormControl>
+                            <Input placeholder="Main Warehouse" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="location"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>City, State</FormLabel>
+                          <FormControl>
+                            <Input placeholder="New York, NY" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  <FormField
+                    control={form.control}
+                    name="address"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Full Address</FormLabel>
+                        <FormControl>
+                          <Input placeholder="123 Warehouse Street, City, State 12345" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <FormField
+                      control={form.control}
+                      name="manager"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Manager Name</FormLabel>
+                          <FormControl>
+                            <Input placeholder="John Smith" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="phone"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Phone Number</FormLabel>
+                          <FormControl>
+                            <Input placeholder="+1-555-0123" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  <FormField
+                    control={form.control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Email Address</FormLabel>
+                        <FormControl>
+                          <Input type="email" placeholder="warehouse@company.com" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <div className="flex justify-end space-x-2">
+                    <Button type="button" variant="outline" onClick={() => {
+                      setIsAddDialogOpen(false);
+                      setEditingWarehouse(null);
+                      form.reset();
+                    }}>
+                      Cancel
+                    </Button>
+                    <Button type="submit">
+                      {editingWarehouse ? 'Update' : 'Add'} Warehouse
+                    </Button>
+                  </div>
+                </form>
+              </Form>
+            </DialogContent>
+          </Dialog>
+        )}
+      </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {warehouses.map((warehouse) => (
           <Card key={warehouse.id} className="hover:shadow-lg transition-shadow">
             <CardHeader>
-              <CardTitle className="flex items-center text-lg">
-                <Building2 className="w-5 h-5 mr-2 text-blue-600" />
-                {warehouse.name}
+              <CardTitle className="flex items-center justify-between text-lg">
+                <div className="flex items-center">
+                  <Building2 className="w-5 h-5 mr-2 text-blue-600" />
+                  {warehouse.name}
+                </div>
+                {isAdmin && (
+                  <div className="flex space-x-1">
+                    <Button 
+                      variant="ghost" 
+                      size="sm"
+                      onClick={() => handleEditWarehouse(warehouse)}
+                    >
+                      <Edit className="w-4 h-4" />
+                    </Button>
+                    <Button 
+                      variant="ghost" 
+                      size="sm"
+                      onClick={() => handleDeleteWarehouse(warehouse.id)}
+                      className="text-red-600 hover:text-red-800"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
+                  </div>
+                )}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center text-sm text-gray-600">
                 <MapPin className="w-4 h-4 mr-2" />
                 {warehouse.location}
+              </div>
+              
+              <div className="text-sm text-gray-600">
+                <p className="font-medium">Address:</p>
+                <p>{warehouse.address}</p>
               </div>
               
               <div className="space-y-2">
@@ -79,10 +319,33 @@ export const WarehouseManagement = () => {
                   </div>
                 </div>
               </div>
+
+              <div className="pt-2 border-t">
+                <div className="text-sm">
+                  <p className="font-medium text-gray-700">Manager:</p>
+                  <p className="text-gray-600">{warehouse.manager}</p>
+                </div>
+                <div className="text-sm mt-2">
+                  <p className="text-gray-600">{warehouse.phone}</p>
+                  <p className="text-gray-600">{warehouse.email}</p>
+                </div>
+              </div>
             </CardContent>
           </Card>
         ))}
       </div>
+
+      {!isAdmin && (
+        <Card className="mt-6">
+          <CardContent className="p-6">
+            <div className="text-center py-4">
+              <Shield className="w-12 h-12 text-gray-400 mx-auto mb-3" />
+              <h3 className="text-lg font-semibold text-gray-600 mb-2">Admin Access Required</h3>
+              <p className="text-gray-500">Only administrators can add, edit, or delete warehouses.</p>
+            </div>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 };
