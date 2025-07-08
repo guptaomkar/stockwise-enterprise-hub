@@ -1,11 +1,38 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+
+import React, { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { Sidebar } from '../components/layout/Sidebar';
+import { Header } from '../components/layout/Header';
+import { Dashboard } from '../components/dashboard/Dashboard';
+import { ProductCatalog } from '../components/products/ProductCatalog';
+import { InventoryOverview } from '../components/inventory/InventoryOverview';
+import { WarehouseManagement } from '../components/warehouse/WarehouseManagement';
+import { Analytics } from '../components/analytics/Analytics';
+import { LoginForm } from '../components/auth/LoginForm';
+import { useAuth } from '../hooks/useAuth';
 
 const Index = () => {
+  const { isAuthenticated, user } = useAuth();
+
+  if (!isAuthenticated) {
+    return <LoginForm />;
+  }
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
+    <div className="min-h-screen bg-gray-50 flex w-full">
+      <Sidebar />
+      <div className="flex-1 flex flex-col">
+        <Header user={user} />
+        <main className="flex-1 p-6 overflow-auto">
+          <Routes>
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/products" element={<ProductCatalog />} />
+            <Route path="/inventory" element={<InventoryOverview />} />
+            <Route path="/warehouses" element={<WarehouseManagement />} />
+            <Route path="/analytics" element={<Analytics />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </main>
       </div>
     </div>
   );
