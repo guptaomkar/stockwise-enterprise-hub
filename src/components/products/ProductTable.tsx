@@ -2,56 +2,55 @@
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Edit, Trash2, MoreHorizontal, Package } from 'lucide-react';
+import { Edit, Trash2, MoreHorizontal, Package, MapPin } from 'lucide-react';
 
-const products = [
-  {
-    id: 1,
-    sku: 'OFF-001',
-    name: 'Office Paper A4',
-    category: 'Office Supplies',
-    stock: 150,
-    price: 12.99,
-    status: 'Active',
-  },
-  {
-    id: 2, 
-    sku: 'ELE-045',
-    name: 'USB Cable Type-C',
-    category: 'Electronics',
-    stock: 75,
-    price: 8.99,
-    status: 'Active',
-  },
-  {
-    id: 3,
-    sku: 'ELE-023',
-    name: 'Wireless Mouse',
-    category: 'Electronics',
-    stock: 32,
-    price: 24.99,
-    status: 'Low Stock',
-  },
-  {
-    id: 4,
-    sku: 'FOD-012',
-    name: 'Coffee Beans Premium',
-    category: 'Food & Beverage',
-    stock: 89,
-    price: 19.99,
-    status: 'Active',
-  },
-];
-
-interface ProductTableProps {
-  searchTerm: string;
+interface Product {
+  id: string;
+  name: string;
+  sku: string;
+  description: string;
+  category: string;
+  price: number;
+  stock: number;
+  minStock: number;
+  warehouse: string;
+  location: string;
+  barcode?: string;
+  status: string;
 }
 
-export const ProductTable: React.FC<ProductTableProps> = ({ searchTerm }) => {
+interface ProductTableProps {
+  products: Product[];
+  searchTerm: string;
+  onEdit: (product: Product) => void;
+  onDelete: (productId: string) => void;
+  canEdit: boolean;
+}
+
+export const ProductTable: React.FC<ProductTableProps> = ({ 
+  products, 
+  searchTerm, 
+  onEdit, 
+  onDelete, 
+  canEdit 
+}) => {
   const filteredProducts = products.filter(product =>
     product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    product.sku.toLowerCase().includes(searchTerm.toLowerCase())
+    product.sku.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    product.category.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  const getCategoryLabel = (category: string) => {
+    const categories: { [key: string]: string } = {
+      'office-supplies': 'Office Supplies',
+      'electronics': 'Electronics',
+      'food-beverage': 'Food & Beverage',
+      'furniture': 'Furniture',
+      'raw-materials': 'Raw Materials',
+      'finished-goods': 'Finished Goods',
+    };
+    return categories[category] || category;
+  };
 
   return (
     <Card>
@@ -70,6 +69,9 @@ export const ProductTable: React.FC<ProductTableProps> = ({ searchTerm }) => {
                   Category
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Location
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Stock
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -78,9 +80,11 @@ export const ProductTable: React.FC<ProductTableProps> = ({ searchTerm }) => {
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Status
                 </th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Actions
-                </th>
+                {canEdit && (
+                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Actions
+                  </th>
+                )}
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
@@ -95,6 +99,9 @@ export const ProductTable: React.FC<ProductTableProps> = ({ searchTerm }) => {
                         <div className="text-sm font-medium text-gray-900">
                           {product.name}
                         </div>
+                        <div className="text-sm text-gray-500">
+                          {product.description}
+                        </div>
                       </div>
                     </div>
                   </td>
@@ -102,10 +109,22 @@ export const ProductTable: React.FC<ProductTableProps> = ({ searchTerm }) => {
                     {product.sku}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {product.category}
+                    {getCategoryLabel(product.category)}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="flex items-center text-sm text-gray-500">
+                      <MapPin className="w-4 h-4 mr-1" />
+                      <div>
+                        <div className="font-medium">{product.warehouse}</div>
+                        <div className="text-xs">{product.location}</div>
+                      </div>
+                    </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {product.stock}
+                    <div>
+                      <div className="font-medium">{product.stock}</div>
+                      <div className="text-xs text-gray-500">Min: {product.minStock}</div>
+                    </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                     ${product.price}
@@ -115,25 +134,34 @@ export const ProductTable: React.FC<ProductTableProps> = ({ searchTerm }) => {
                       className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
                         product.status === 'Active'
                           ? 'bg-green-100 text-green-800'
-                          : 'bg-yellow-100 text-yellow-800'
+                          : product.status === 'Low Stock'
+                          ? 'bg-yellow-100 text-yellow-800'
+                          : 'bg-red-100 text-red-800'
                       }`}
                     >
                       {product.status}
                     </span>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <div className="flex items-center justify-end space-x-2">
-                      <Button variant="ghost" size="sm">
-                        <Edit className="w-4 h-4" />
-                      </Button>
-                      <Button variant="ghost" size="sm" className="text-red-600 hover:text-red-700">
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
-                      <Button variant="ghost" size="sm">
-                        <MoreHorizontal className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  </td>
+                  {canEdit && (
+                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                      <div className="flex items-center justify-end space-x-2">
+                        <Button variant="ghost" size="sm" onClick={() => onEdit(product)}>
+                          <Edit className="w-4 h-4" />
+                        </Button>
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          className="text-red-600 hover:text-red-700"
+                          onClick={() => onDelete(product.id)}
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                        <Button variant="ghost" size="sm">
+                          <MoreHorizontal className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    </td>
+                  )}
                 </tr>
               ))}
             </tbody>
