@@ -1,70 +1,73 @@
 
 import React from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { 
   LayoutDashboard, 
   Package, 
   Warehouse, 
-  BarChart3, 
   ShoppingCart, 
+  BarChart3, 
   Users, 
   Settings,
-  Building2
+  PackageCheck,
+  ShoppingBag,
+  TruckIcon,
+  Building,
+  Clipboard
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { useAuth } from '../../hooks/useAuth';
 
 const navigation = [
-  { name: 'Dashboard', href: '/', icon: LayoutDashboard },
-  { name: 'Products', href: '/products', icon: Package },
-  { name: 'Inventory', href: '/inventory', icon: Warehouse },
-  { name: 'Warehouses', href: '/warehouses', icon: Building2 },
-  { name: 'Orders', href: '/orders', icon: ShoppingCart },
-  { name: 'Analytics', href: '/analytics', icon: BarChart3 },
-  { name: 'Users', href: '/users', icon: Users },
-  { name: 'Settings', href: '/settings', icon: Settings },
+  { name: 'Dashboard', href: '/', icon: LayoutDashboard, roles: ['Administrator', 'Manager', 'Staff', 'Auditor'] },
+  { name: 'Products', href: '/products', icon: Package, roles: ['Administrator', 'Manager', 'Staff', 'Auditor'] },
+  { name: 'Inventory', href: '/inventory', icon: PackageCheck, roles: ['Administrator', 'Manager', 'Staff', 'Auditor'] },
+  { name: 'Stock Control', href: '/inventory-control', icon: Clipboard, roles: ['Administrator', 'Manager', 'Staff'] },
+  { name: 'Warehouses', href: '/warehouses', icon: Warehouse, roles: ['Administrator', 'Manager', 'Staff'] },
+  { name: 'Procurement', href: '/procurement', icon: ShoppingBag, roles: ['Administrator', 'Manager'] },
+  { name: 'Sales & Dispatch', href: '/sales', icon: TruckIcon, roles: ['Administrator', 'Manager', 'Staff'] },
+  { name: 'Orders', href: '/orders', icon: ShoppingCart, roles: ['Administrator', 'Manager', 'Staff'] },
+  { name: 'Vendors & Customers', href: '/vendors', icon: Building, roles: ['Administrator', 'Manager'] },
+  { name: 'Analytics', href: '/analytics', icon: BarChart3, roles: ['Administrator', 'Manager', 'Auditor'] },
+  { name: 'Users', href: '/users', icon: Users, roles: ['Administrator'] },
+  { name: 'Settings', href: '/settings', icon: Settings, roles: ['Administrator', 'Manager'] },
 ];
 
 export const Sidebar = () => {
-  const location = useLocation();
+  const { user } = useAuth();
+
+  const filteredNavigation = navigation.filter(item => 
+    !item.roles || item.roles.includes(user?.role || '') || user?.email === 'admin@inventorypro.com'
+  );
 
   return (
-    <div className="w-64 bg-white shadow-sm border-r border-gray-200 flex flex-col">
-      <div className="p-6 border-b border-gray-200">
-        <div className="flex items-center space-x-3">
-          <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-            <Warehouse className="w-5 h-5 text-white" />
+    <div className="hidden md:flex md:w-64 md:flex-col md:fixed md:inset-y-0">
+      <div className="flex-1 flex flex-col min-h-0 bg-white border-r border-gray-200">
+        <div className="flex-1 flex flex-col pt-5 pb-4 overflow-y-auto">
+          <div className="flex items-center flex-shrink-0 px-4">
+            <Package className="h-8 w-8 text-blue-600" />
+            <span className="ml-2 text-xl font-bold text-gray-900">InventoryPro</span>
           </div>
-          <div>
-            <h1 className="text-xl font-bold text-gray-900">InventoryPro</h1>
-            <p className="text-xs text-gray-500">Enterprise Edition</p>
-          </div>
-        </div>
-      </div>
-      
-      <nav className="flex-1 p-4 space-y-1">
-        {navigation.map((item) => {
-          const isActive = location.pathname === item.href;
-          return (
-            <NavLink
-              key={item.name}
-              to={item.href}
-              className={cn(
-                'flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors',
-                isActive
-                  ? 'bg-blue-50 text-blue-700 border-r-2 border-blue-600'
-                  : 'text-gray-700 hover:bg-gray-100'
-              )}
-            >
-              <item.icon className="mr-3 h-5 w-5" />
-              {item.name}
-            </NavLink>
-          );
-        })}
-      </nav>
-      
-      <div className="p-4 border-t border-gray-200">
-        <div className="text-xs text-gray-500 text-center">
-          Version 1.0.0
+          <nav className="mt-8 flex-1 px-2 space-y-1">
+            {filteredNavigation.map((item) => (
+              <NavLink
+                key={item.name}
+                to={item.href}
+                className={({ isActive }) =>
+                  `${
+                    isActive
+                      ? 'bg-blue-50 border-blue-500 text-blue-700'
+                      : 'border-transparent text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                  } group flex items-center px-2 py-2 text-sm font-medium border-l-4 transition-colors duration-200`
+                }
+              >
+                <item.icon
+                  className="mr-3 flex-shrink-0 h-5 w-5"
+                  aria-hidden="true"
+                />
+                {item.name}
+              </NavLink>
+            ))}
+          </nav>
         </div>
       </div>
     </div>
