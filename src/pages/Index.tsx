@@ -26,27 +26,31 @@ const Index = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex w-full">
-      <Sidebar />
-      <div className="flex-1 flex flex-col">
-        <Header user={user} />
-        <main className="flex-1 p-6 overflow-auto">
-          <Routes>
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/products" element={<ProductCatalog />} />
-            <Route path="/inventory" element={<InventoryOverview />} />
-            <Route path="/inventory-control" element={<InventoryControl />} />
-            <Route path="/warehouses" element={<WarehouseManagement />} />
-            <Route path="/orders" element={<OrderManagement />} />
-            <Route path="/procurement" element={<ProcurementManagement />} />
-            <Route path="/sales" element={<SalesManagement />} />
-            <Route path="/vendors" element={<VendorManagement />} />
-            <Route path="/analytics" element={<Analytics />} />
-            <Route path="/users" element={<UserManagement />} />
-            <Route path="/settings" element={<Settings />} />
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        </main>
+    <div className="min-h-screen bg-gray-50">
+      <div className="flex h-screen overflow-hidden">
+        <Sidebar />
+        <div className="flex flex-col flex-1 overflow-hidden md:ml-64">
+          <Header user={user} />
+          <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 p-6">
+            <div className="max-w-7xl mx-auto">
+              <Routes>
+                <Route path="/" element={<Dashboard />} />
+                <Route path="/products" element={<ProductCatalog />} />
+                <Route path="/inventory" element={<InventoryOverview />} />
+                <Route path="/inventory-control" element={<InventoryControl />} />
+                <Route path="/warehouses" element={<WarehouseManagement />} />
+                <Route path="/orders" element={<OrderManagement />} />
+                <Route path="/procurement" element={<ProcurementManagement />} />
+                <Route path="/sales" element={<SalesManagement />} />
+                <Route path="/vendors" element={<VendorManagement />} />
+                <Route path="/analytics" element={<Analytics />} />
+                <Route path="/users" element={<UserManagement />} />
+                <Route path="/settings" element={<Settings />} />
+                <Route path="*" element={<Navigate to="/" replace />} />
+              </Routes>
+            </div>
+          </main>
+        </div>
       </div>
     </div>
   );

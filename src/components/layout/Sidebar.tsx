@@ -40,14 +40,14 @@ export const Sidebar = () => {
   );
 
   return (
-    <div className="hidden md:flex md:w-64 md:flex-col md:fixed md:inset-y-0">
-      <div className="flex-1 flex flex-col min-h-0 bg-white border-r border-gray-200">
-        <div className="flex-1 flex flex-col pt-5 pb-4 overflow-y-auto">
-          <div className="flex items-center flex-shrink-0 px-4">
+    <div className="fixed inset-y-0 left-0 z-50 w-64 transform transition-transform duration-300 ease-in-out md:translate-x-0">
+      <div className="flex h-full flex-col bg-white shadow-lg border-r border-gray-200">
+        <div className="flex flex-col flex-1 min-h-0 overflow-y-auto">
+          <div className="flex items-center flex-shrink-0 px-4 py-6 border-b border-gray-200">
             <Package className="h-8 w-8 text-blue-600" />
             <span className="ml-2 text-xl font-bold text-gray-900">InventoryPro</span>
           </div>
-          <nav className="mt-8 flex-1 px-2 space-y-1">
+          <nav className="flex-1 px-2 py-4 space-y-1">
             {filteredNavigation.map((item) => (
               <NavLink
                 key={item.name}
@@ -55,9 +55,9 @@ export const Sidebar = () => {
                 className={({ isActive }) =>
                   `${
                     isActive
-                      ? 'bg-blue-50 border-blue-500 text-blue-700'
+                      ? 'bg-blue-50 border-blue-500 text-blue-700 border-r-4'
                       : 'border-transparent text-gray-600 hover:bg-gray-50 hover:text-gray-900'
-                  } group flex items-center px-2 py-2 text-sm font-medium border-l-4 transition-colors duration-200`
+                  } group flex items-center px-3 py-2 text-sm font-medium rounded-l-md transition-colors duration-200`
                 }
               >
                 <item.icon

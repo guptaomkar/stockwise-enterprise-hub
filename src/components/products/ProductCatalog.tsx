@@ -108,7 +108,7 @@ export const ProductCatalog = () => {
 
   if (!canView) {
     return (
-      <div className="space-y-6 animate-fade-in">
+      <div className="min-h-[400px] flex items-center justify-center">
         <div className="text-center py-12">
           <Shield className="w-16 h-16 text-gray-400 mx-auto mb-4" />
           <h2 className="text-xl font-semibold text-gray-600 mb-2">Access Restricted</h2>
@@ -119,8 +119,8 @@ export const ProductCatalog = () => {
   }
 
   return (
-    <div className="space-y-6 animate-fade-in">
-      <div className="flex items-center justify-between">
+    <div className="space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <h1 className="text-2xl font-bold text-gray-900">Product Catalog</h1>
         {canAdd && (
           <Button onClick={() => setIsFormOpen(true)} className="bg-blue-600 hover:bg-blue-700">
@@ -130,8 +130,8 @@ export const ProductCatalog = () => {
         )}
       </div>
 
-      <div className="flex items-center space-x-4">
-        <div className="relative flex-1 max-w-md">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-4 sm:space-y-0 sm:space-x-4">
+        <div className="relative flex-1 max-w-md w-full">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
           <Input
             type="text"
@@ -147,13 +147,15 @@ export const ProductCatalog = () => {
         </Button>
       </div>
 
-      <ProductTable 
-        products={products}
-        searchTerm={searchTerm} 
-        onEdit={handleEditProduct}
-        onDelete={handleDeleteProduct}
-        canEdit={canAdd}
-      />
+      <div className="bg-white rounded-lg shadow">
+        <ProductTable 
+          products={products}
+          searchTerm={searchTerm} 
+          onEdit={handleEditProduct}
+          onDelete={handleDeleteProduct}
+          canEdit={canAdd}
+        />
+      </div>
 
       {isFormOpen && (
         <ProductForm
