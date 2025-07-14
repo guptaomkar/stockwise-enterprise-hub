@@ -71,3 +71,14 @@ inventory-system/
 ├── shared/               # Shared constants/types
 ├── docker-compose.yml
 └── README.md
+
+
+```
+
+
+📄 License
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+© 2025 | Developed by Omkar Gupta
+💌 Have suggestions? Open an issue or contribute!
+
