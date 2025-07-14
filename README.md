@@ -1,73 +1,73 @@
-# Welcome to your Lovable project
+# 📦 Enterprise Inventory Management System
 
-## Project info
+A powerful, scalable, and analytics-driven **Inventory Management System** tailored for large organizations. Built using the modern MERN stack with TypeScript, this system supports multi-warehouse tracking, advanced analytics dashboards, purchase/sales workflows, barcode management, and real-time updates.
 
-**URL**: https://lovable.dev/projects/62c97437-5996-448b-80aa-ab685e9a6bc8
+> 🚀 Live Demo: [Click Here to Explore the Live App](https://stockwise-enterprise-hub.onrender.com/)  
+---
 
-## How can I edit this code?
+## 📸 Screenshots
 
-There are several ways of editing your application.
+| Dashboard Overview | Inventory Listing | Product Details |
+|--------------------|-------------------|-----------------|
+| ![](./screenshots/dashboard.png) | ![](./screenshots/inventory-list.png) | ![](./screenshots/product-view.png) |
 
-**Use Lovable**
+---
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/62c97437-5996-448b-80aa-ab685e9a6bc8) and start prompting.
+## 🌟 Features
 
-Changes made via Lovable will be committed automatically to this repo.
+- 🔐 **User Authentication & RBAC**
+  - JWT Auth with Admin, Manager, Staff roles
+- 📦 **Product & Category Management**
+  - SKU, barcode, variant, vendor linking
+- 🏢 **Multi-Warehouse Support**
+  - Bin, rack, shelf-level tracking
+- 📥 **Procurement / Purchase Orders**
+- 📤 **Sales & Dispatch Workflows**
+- 📊 **Analytics Dashboard**
+  - Fast-moving/slow-moving items
+  - Inventory valuation, stock levels
+- 📈 **Recharts & D3 Visualizations**
+- 🧾 **Barcode/QR Code Integration**
+- 🔄 **Real-Time Updates** via WebSocket
+- 🧩 **API-First Architecture** with Swagger Docs
+- 🧠 **AI-Ready** schema and modular backend
 
-**Use your preferred IDE**
+---
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+## 🧰 Tech Stack
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+| Layer       | Technology |
+|-------------|------------|
+| **Frontend** | [React.js](https://react.dev/) + [TypeScript](https://www.typescriptlang.org/) + [Tailwind CSS](https://tailwindcss.com/) |
+| **Backend**  | [Node.js](https://nodejs.org/) + [Express.js](https://expressjs.com/) + [TypeScript](https://www.typescriptlang.org/) |
+| **Database** | [MongoDB](https://www.mongodb.com/) (with Mongoose) |
+| **Charts**   | [Recharts](https://recharts.org/) / [D3.js](https://d3js.org/) |
+| **Auth**     | [JWT](https://jwt.io/) |
+| **Docs**     | [Swagger UI](https://swagger.io/tools/swagger-ui/) |
+| **CI/CD**    | [GitHub Actions](https://github.com/features/actions) |
+| **Containerization** | [Docker](https://www.docker.com/) |
+| **Real-time** | [Socket.IO](https://socket.io/) |
 
-Follow these steps:
+---
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+## 📁 Project Structure
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
-
-**Edit a file directly in GitHub**
-
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/62c97437-5996-448b-80aa-ab685e9a6bc8) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+```bash
+inventory-system/
+│
+├── client/               # React + TS frontend
+│   └── src/
+│       └── components/
+│       └── pages/
+│       └── charts/
+│
+├── server/               # Node.js + Express + TS backend
+│   └── controllers/
+│   └── routes/
+│   └── models/
+│   └── middleware/
+│   └── sockets/
+│
+├── shared/               # Shared constants/types
+├── docker-compose.yml
+└── README.md
