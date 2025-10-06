@@ -1,21 +1,30 @@
 
 import React from 'react';
-import { Bell, Search, User, LogOut } from 'lucide-react';
+import { Bell, Search, User, LogOut, Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useAuth } from '../../hooks/useAuth';
 
 interface HeaderProps {
   user: any;
+  onMenuClick: () => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ user }) => {
+export const Header: React.FC<HeaderProps> = ({ user, onMenuClick }) => {
   const { logout } = useAuth();
 
   return (
-    <header className="bg-white shadow-sm border-b border-gray-200 px-6 py-4 flex-shrink-0">
+    <header className="bg-white shadow-sm border-b border-gray-200 px-4 md:px-6 py-4 flex-shrink-0">
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4 flex-1">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="md:hidden"
+            onClick={onMenuClick}
+          >
+            <Menu className="h-5 w-5" />
+          </Button>
           <div className="relative max-w-md w-full">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
             <Input

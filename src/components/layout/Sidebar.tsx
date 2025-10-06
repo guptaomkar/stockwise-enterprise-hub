@@ -13,9 +13,11 @@ import {
   ShoppingBag,
   TruckIcon,
   Building,
-  Clipboard
+  Clipboard,
+  X
 } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
+import { Button } from '@/components/ui/button';
 
 const navigation = [
   { name: 'Dashboard', href: '/', icon: LayoutDashboard, roles: ['Administrator', 'Manager', 'Staff', 'Auditor'] },
@@ -32,7 +34,12 @@ const navigation = [
   { name: 'Settings', href: '/settings', icon: Settings, roles: ['Administrator', 'Manager'] },
 ];
 
-export const Sidebar = () => {
+interface SidebarProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   const { user } = useAuth();
 
   const filteredNavigation = navigation.filter(item => 
@@ -40,18 +47,41 @@ export const Sidebar = () => {
   );
 
   return (
-    <div className="fixed inset-y-0 left-0 z-50 w-64 transform transition-transform duration-300 ease-in-out md:translate-x-0">
-      <div className="flex h-full flex-col bg-white shadow-lg border-r border-gray-200">
+    <>
+      {/* Backdrop overlay for mobile */}
+      {isOpen && (
+        <div 
+          className="fixed inset-0 bg-black/50 z-40 md:hidden"
+          onClick={onClose}
+        />
+      )}
+      
+      {/* Sidebar */}
+      <div className={`fixed inset-y-0 left-0 z-50 w-64 transform transition-transform duration-300 ease-in-out ${
+        isOpen ? 'translate-x-0' : '-translate-x-full'
+      } md:translate-x-0`}>
+        <div className="flex h-full flex-col bg-white shadow-lg border-r border-gray-200">
         <div className="flex flex-col flex-1 min-h-0 overflow-y-auto">
-          <div className="flex items-center flex-shrink-0 px-4 py-6 border-b border-gray-200">
-            <Package className="h-8 w-8 text-blue-600" />
-            <span className="ml-2 text-xl font-bold text-gray-900">InventoryPro</span>
+          <div className="flex items-center justify-between flex-shrink-0 px-4 py-6 border-b border-gray-200">
+            <div className="flex items-center">
+              <Package className="h-8 w-8 text-blue-600" />
+              <span className="ml-2 text-xl font-bold text-gray-900">InventoryPro</span>
+            </div>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="md:hidden"
+              onClick={onClose}
+            >
+              <X className="h-5 w-5" />
+            </Button>
           </div>
           <nav className="flex-1 px-2 py-4 space-y-1">
             {filteredNavigation.map((item) => (
               <NavLink
                 key={item.name}
                 to={item.href}
+                onClick={() => onClose()}
                 className={({ isActive }) =>
                   `${
                     isActive
@@ -71,5 +101,6 @@ export const Sidebar = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };

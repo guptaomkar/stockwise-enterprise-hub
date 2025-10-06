@@ -20,6 +20,7 @@ import { useAuth } from '../hooks/useAuth';
 
 const Index = () => {
   const { isAuthenticated, user } = useAuth();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   if (!isAuthenticated) {
     return <LoginForm />;
@@ -28,9 +29,9 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="flex h-screen overflow-hidden">
-        <Sidebar />
+        <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
         <div className="flex flex-col flex-1 overflow-hidden md:ml-64">
-          <Header user={user} />
+          <Header user={user} onMenuClick={() => setSidebarOpen(true)} />
           <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 p-6">
             <div className="max-w-7xl mx-auto">
               <Routes>
